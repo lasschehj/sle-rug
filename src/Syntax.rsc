@@ -10,6 +10,7 @@ start syntax Form
 syntax Question
   = Str Id ":" Type
   | Str Id ":" Type "=" Expr
+  | @Foldable "{" Question* "}"
   | @Foldable left "if" "(" Expr ")" "{" Question* "}"
   | @Foldable left "if" "(" Expr ")" "{" Question* "}" "else" "{" Question* "}"
   ; 
@@ -17,7 +18,7 @@ syntax Question
 
 syntax Expr 
   = Id \ Reserved
-  | left Str \ Reserved
+  | left Str
   | left Int
   | left Bool
   | bracket "(" Expr ")"
@@ -29,7 +30,7 @@ syntax Expr
   > left (Expr "\<" Expr
   	| Expr "\<=" Expr
   	| Expr "\>" Expr
-  	| Expr "=\>" Expr)
+  	| Expr "\>=" Expr)
   > left (Expr "!=" Expr
   	| Expr "==" Expr)
   > left Expr "&&" Expr
@@ -41,6 +42,10 @@ keyword Reserved
 	| "false"
 	| "if"
 	| "else"
+	| "string"
+	| "integer"
+	| "boolean"
+	| "form"
 	;
   
 syntax Type
@@ -52,7 +57,7 @@ syntax Type
 lexical Str = [\"] ![\"]* [\"];
 
 lexical Int = [\-]?[1-9][0-9]*
-  | [0]
+  | [0]
   ;
 
 lexical Bool = "true"
